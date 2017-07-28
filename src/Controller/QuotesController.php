@@ -21,7 +21,7 @@ class QuotesController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Authors']
+            'contain' => ['Authors', 'Tags']
         ];
         $quotes = $this->paginate($this->Quotes);
 

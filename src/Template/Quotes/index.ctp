@@ -16,30 +16,24 @@
 </nav>
 <div class="quotes index large-9 medium-8 columns content">
     <h3><?= __('Quotes') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('created') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('author_id') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($quotes as $quote): ?>
-            <tr>
-                <td><?= $this->Number->format($quote->id) ?></td>
-                <td><?= h($quote->created) ?></td>
-                <td><?= $quote->has('author') ? $this->Html->link($quote->author->name, ['controller' => 'Authors', 'action' => 'view', $quote->author->id]) : '' ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $quote->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $quote->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $quote->id], ['confirm' => __('Are you sure you want to delete # {0}?', $quote->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+    <?php foreach ($quotes as $quote): ?>
+        <div class="row quote">
+            <div class="author">
+                (<?= $quote->has('author') ? $this->Html->link($quote->author->name, ['controller' => 'Authors', 'action' => 'view', $quote->author->id]) : '' ?>)
+            </div>
+            <q><?= h($quote->quote) ?></q>
+            <div class="row">
+                <div class="tags columns large-8">
+                    <?php
+                    foreach ($quote->tags as $tag) {
+                        print '<span>' . $tag->name . '</span>';
+                    }
+                    ?>
+                </div>
+                <time class="columns large-4"><?= h($quote->created) ?></time>
+            </div>
+        </div>
+    <?php endforeach; ?>
     <div class="paginator">
         <ul class="pagination">
             <?= $this->Paginator->first('<< ' . __('first')) ?>
