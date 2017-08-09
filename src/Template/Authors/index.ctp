@@ -28,9 +28,9 @@
                 <td><?= $this->Number->format($author->id) ?></td>
                 <td><?= h($author->name) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $author->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $author->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $author->id], ['confirm' => __('Are you sure you want to delete # {0}?', $author->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $author->id], ['class' => 'button']) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $author->id], ['class' => 'button']) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $author->id], ['confirm' => __('Are you sure you want to delete # {0}?', $author->id), 'class' => 'button']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
