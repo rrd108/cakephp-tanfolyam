@@ -71,7 +71,14 @@ return [
             'role' => ['user'],
             'plugin' => '*',
             'controller' => ['Authors', 'Quotes'],
-            'action' => ['index', 'edit'],
+            'action' => ['index'],
+        ],
+        [
+            'role' => ['user'],
+            'plugin' => '*',
+            'controller' => ['Quotes'],
+            'action' => ['edit'],
+            'allowed' => new \CakeDC\Auth\Auth\Rules\Owner()
         ],
         /*[
             'role' => '*',
