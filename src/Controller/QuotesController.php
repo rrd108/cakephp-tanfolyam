@@ -55,7 +55,8 @@ class QuotesController extends AppController
     {
         $quote = $this->Quotes->newEntity();
         if ($this->request->is('post')) {
-            $quote = $this->Quotes->patchEntity($quote, $this->request->getData());
+            $request = $this->request->withData('user_id', $this->Auth->user('id'));
+            $quote = $this->Quotes->patchEntity($quote, $request->getData());
             if ($this->Quotes->save($quote)) {
                 $this->Flash->success(__('The quote has been saved.'));
 
@@ -114,5 +115,16 @@ class QuotesController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function test()
+    {
+        debug($this->Quotes->find('ownedBy', ['userName' => 'Bendegúz'])->extract('id')->toArray());
+
+        debug($this->Quotes->find('taggedBy', ['tagName' => 'pozitív'])->extract('id')->toArray());
+
+        debug($this->Quotes->find('ownedAndTaggedBy', ['userName' => 'Bendegúz', 'tagName' => 'pozitív'])->extract('id')->toArray());
+
+        debug($this->Quotes->find('betterOwnedAndTaggedBy', ['userName' => 'Bendegúz', 'tagName' => 'pozitív'])->extract('id')->toArray());
     }
 }

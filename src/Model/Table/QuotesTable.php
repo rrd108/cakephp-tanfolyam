@@ -45,6 +45,10 @@ class QuotesTable extends Table
             'foreignKey' => 'author_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER'
+        ]);
         $this->belongsToMany('Tags', [
             'foreignKey' => 'quote_id',
             'targetForeignKey' => 'tag_id',
@@ -83,5 +87,44 @@ class QuotesTable extends Table
         $rules->add($rules->existsIn(['author_id'], 'Authors'));
 
         return $rules;
+    }
+
+    public function findOwnedBy(Query $query, array $options)
+    {
+        return $query
+            ->contain(['Users', 'Tags'])
+            ->matching('Users', function ($q) use ($options) {
+                return $q->where(['Users.username' => $options['userName']]);
+            });
+    }
+
+    public function findTaggedBy(Query $query, array $options)
+    {
+        return $query
+            ->contain(['Users', 'Tags'])
+            ->matching('Tags', function ($q) use ($options) {
+                return $q->where(['Tags.name' => $options['tagName']]);
+            });
+    }
+
+    public function findOwnedAndTaggedBy(Query $query, array $options)
+    {
+        return $query
+            ->contain(['Users', 'Tags'])
+            ->matching('Users', function ($q) use ($options) {
+                return $q->where(['Users.username' => $options['userName']]);
+            })
+            ->matching('Tags', function ($q) use ($options) {
+                return $q->where(['Tags.name' => $options['tagName']]);
+            });
+    }
+
+    public function findBetterOwnedAndTaggedBy(Query $query, array $options)
+    {
+        $queryTemp1 = $query->cleanCopy();
+        $queryTemp2 = $query->cleanCopy();
+
+        return $queryTemp1->find('taggedBy', $options)
+            ->where(['Quotes.id IN' => $queryTemp2->find('ownedBy', $options)->select('id')]);   
     }
 }
