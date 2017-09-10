@@ -125,6 +125,9 @@ class QuotesTable extends Table
         $queryTemp2 = $query->cleanCopy();
 
         return $queryTemp1->find('taggedBy', $options)
-            ->where(['Quotes.id IN' => $queryTemp2->find('ownedBy', $options)->select('id')]);   
+            ->where([
+                'Quotes.id IN' => $queryTemp2->find('ownedBy', $options)
+                    ->select('id')
+                    ]);
     }
 }

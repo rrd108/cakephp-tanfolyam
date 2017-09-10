@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Log\Log;
 
 /**
  * Quotes Controller
@@ -20,10 +21,12 @@ class QuotesController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
+        /*$this->paginate = [
             'contain' => ['Authors', 'Tags']
         ];
-        $quotes = $this->paginate($this->Quotes);
+        $quotes = $this->paginate($this->Quotes);*/
+
+        $quotes = $this->Quotes->find()->contain(['Authors', 'Tags']);
 
         $this->set(compact('quotes'));
         $this->set('_serialize', ['quotes']);
@@ -123,8 +126,28 @@ class QuotesController extends AppController
 
         debug($this->Quotes->find('taggedBy', ['tagName' => 'pozitív'])->extract('id')->toArray());
 
-        debug($this->Quotes->find('ownedAndTaggedBy', ['userName' => 'Bendegúz', 'tagName' => 'pozitív'])->extract('id')->toArray());
+        debug(
+            $this->Quotes->find(
+                'ownedAndTaggedBy',
+                [
+                    'userName' => 'Bendegúz',
+                    'tagName' => 'pozitív'
+                ]
+                )
+                ->extract('id')
+                ->toArray()
+        );
 
-        debug($this->Quotes->find('betterOwnedAndTaggedBy', ['userName' => 'Bendegúz', 'tagName' => 'pozitív'])->extract('id')->toArray());
+        debug(
+            $this->Quotes->find(
+                'betterOwnedAndTaggedBy',
+                [
+                    'userName' => 'Bendegúz',
+                    'tagName' => 'pozitív'
+                ]
+                )
+                ->extract('id')
+                ->toArray()
+        );
     }
 }
