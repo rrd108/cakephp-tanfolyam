@@ -92,7 +92,7 @@ class QuotesTable extends Table
     public function findOwnedBy(Query $query, array $options)
     {
         return $query
-            ->contain(['Users', 'Tags'])
+            ->contain(['Tags'])
             ->matching('Users', function ($q) use ($options) {
                 return $q->where(['Users.username' => $options['userName']]);
             });
@@ -101,7 +101,7 @@ class QuotesTable extends Table
     public function findTaggedBy(Query $query, array $options)
     {
         return $query
-            ->contain(['Users', 'Tags'])
+            ->contain(['Users'])
             ->matching('Tags', function ($q) use ($options) {
                 return $q->where(['Tags.name' => $options['tagName']]);
             });
@@ -110,7 +110,6 @@ class QuotesTable extends Table
     public function findOwnedAndTaggedBy(Query $query, array $options)
     {
         return $query
-            ->contain(['Users', 'Tags'])
             ->matching('Users', function ($q) use ($options) {
                 return $q->where(['Users.username' => $options['userName']]);
             })
@@ -129,5 +128,21 @@ class QuotesTable extends Table
                 'Quotes.id IN' => $queryTemp2->find('ownedBy', $options)
                     ->select('id')
                     ]);
+    }
+
+    public function findEvenBetterOwnedAndTaggedBy(Query $query, array $options)
+    {
+        return $query->find('taggedBy', $options)
+            ->find('ownedBy', $options);
+    }
+
+    public function findExample(Query $query, array $options)
+    {
+        return $query
+            ->select(['Quotes.id', 'user_id', 'quote'])
+            ->where(['id' => 5, 'author_id' => 2])
+            ->orWhere(['id IN' => [1,3,7,9]])
+            //->group('user_id')
+            ->order('created');
     }
 }

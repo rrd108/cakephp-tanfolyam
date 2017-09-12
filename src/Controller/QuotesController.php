@@ -27,7 +27,8 @@ class QuotesController extends AppController
         $quotes = $this->paginate($this->Quotes);*/
 
         $quotes = $this->Quotes->find()->contain(['Authors', 'Tags']);
-
+        //$quotes = $this->Quotes->find('list');
+        //debug($quotes->toArray());die();
         $this->set(compact('quotes'));
         $this->set('_serialize', ['quotes']);
     }
@@ -149,5 +150,15 @@ class QuotesController extends AppController
                 ->extract('id')
                 ->toArray()
         );
+
+        debug($this->Quotes->find('example'));
+
+        debug($this->Quotes->find(
+            'evenBetterOwnedAndTaggedBy',
+            [
+                'userName' => 'Bendegúz',
+                'tagName' => 'pozitív'
+            ]
+        )->extract('id')->toArray());
     }
 }
